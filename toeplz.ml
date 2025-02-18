@@ -55,7 +55,8 @@ let rec toeplz__  (r:float array) (x:float array) (y:float array) (n:int) (f:flo
  
 let rec toeplz_  (r:float array) (x:float array) (y:float array) (n:int) (f:float array) (b:float array) = 
 					          let determinant = (r.(n-1) *. r.(n-1)) -.( r.(n) *. r.(n-2))
-					          in begin 
+					          in if (( Float.classify_float determinant) = Float.FP_normal) then
+					            begin 
 					          		x.(0)<- (( y.(0) *. r.(n-1)) -. ( y.(1) *. r.(n-2))) /. determinant ;
 					           		x.(1)<- (( r.(n-1) *. y.(1)) -. ( y.(0) *. r.(n))) /. determinant ;
 					           		b.(0)<- ( -1. *.  r.(n-2)) /. determinant ;
@@ -64,7 +65,9 @@ let rec toeplz_  (r:float array) (x:float array) (y:float array) (n:int) (f:floa
 					           		f.(1)<- ( -1. *. r.(n)) /. determinant ;					             	
 					           		toeplz__  r x y n f b 2 ;
 					            end
-
+                     else begin
+					           			raise SingularPrincipalMinor
+					       		  end	
 				 
 (*
 			 the parameters are in the same order and format as for "Num. Rec. in C", which in not necessarily
